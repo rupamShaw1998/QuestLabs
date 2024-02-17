@@ -3,6 +3,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import { Container, IMG } from './App.styled';
 import Entity from './components/Entity';
+import BadgeModal from './components/BadgeModal';
 
 const { Title } = Typography;
 
@@ -45,7 +46,7 @@ function App() {
       key: 2,
       children: <Flex wrap='wrap' gap="large">
         {badges.map((badge) => (
-          <img style={{width: "20%"}} key={badge._id} src={badge.imageUrl} alt='badge' />
+          <BadgeModal key={badge._id} badge={badge} />
         ))}
       </Flex>
     },
