@@ -7,7 +7,7 @@ const Container = styled.div`
   width: 90%;
   top: 20%;
   left: 50%;
-  bottom: 0;
+  bottom: -18%;
   transform: translateX(-50%);
   border-radius: 5% 5% 0 0;
 `;

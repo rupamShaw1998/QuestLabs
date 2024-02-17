@@ -1,4 +1,4 @@
-import { Flex, Typography } from 'antd';
+import { Button, Flex, Tabs, Typography } from 'antd';
 import './App.css';
 import { useEffect, useState } from 'react';
 import { Container, IMG } from './App.styled';
@@ -22,12 +22,43 @@ function App() {
 
   const [profile, setProfile] = useState({});
   const [entities, setEntities] = useState({});
+  const [badges, setBadges] = useState([]);
+  const [pointHistory, setPointHistory] = useState([]);
 
   useEffect(() => {
     getProfile();
     getEntities();
     getRank();
+    getPointHistory();
+    getBadges();
   }, []);
+
+  const items = [
+    {
+      label: "Membership",
+      key: 1,
+      children: "No Membership available",
+      disabled: true
+    },
+    {
+      label: "Badges",
+      key: 2,
+      children: <Flex wrap='wrap' gap="large">
+        {badges.map((badge) => (
+          <img style={{width: "20%"}} key={badge._id} src={badge.imageUrl} alt='badge' />
+        ))}
+      </Flex>
+    },
+    {
+      label: "Point History",
+      key: 3,
+      children: <Flex wrap='wrap' gap="large">
+        {pointHistory.map((ph) => (
+          <Button key={ph._id}>{ph.title}</Button>
+        ))}
+      </Flex>
+    }
+  ];
 
   const getProfile = async () => {
     try {
@@ -62,6 +93,26 @@ function App() {
     }
   };
 
+  const getPointHistory = async () => {
+    try {
+      let res = await fetch(`https://staging.questprotocol.xyz/api/entities/${entityId}/users/${userId}/xp-history`, options);
+      let response = await res.json();
+      setPointHistory(response.data)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getBadges = async () => {
+    try {
+      let res = await fetch(`https://staging.questprotocol.xyz/api/entities/${entityId}/users/${userId}/badges`, options);
+      let response = await res.json();
+      setBadges(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       <Title style={{ color: "white" }} level={4}>Profile</Title>
@@ -73,6 +124,13 @@ function App() {
           <Entity value={`#${entities.position}`} text={"Rank"} />
           <Entity value={entities.tier} text={"Level"} />
         </Flex>
+        <Tabs
+          defaultActiveKey="2"
+          size='large'
+          centered
+          items={items}
+          style={{ marginTop: "7%"}}
+        />
       </Container>
     </div>
   );
